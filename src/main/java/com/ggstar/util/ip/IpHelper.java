@@ -43,6 +43,11 @@ public class IpHelper {
         }
     }
 
+    /**
+     * 静态方法，传入ip地址，返回ip地址所在城市或地区
+     * @param ip    IP地址，例：58.30.15.255
+     * @return  返回IP地址所在城市或地区，例：北京市
+     */
     public static String findRegionByIp(String ip){
         return ipTree.findIp(ip);
     }
