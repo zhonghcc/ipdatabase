@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by lee on 2015/8/11.
+ * Created by Wang Zhe on 2015/8/11.
  */
 public class IpHelper {
 
@@ -33,7 +33,6 @@ public class IpHelper {
             ipRelationList = IpHelper.getIpRelation();
             int count = 0;
             for (IpRelation ipRelation : ipRelationList) {
-                System.out.println(ipRelation.getIpStart() + "," + ipRelation.getIpEnd() + "," + ipRelation.getProvince());
                 ipTree.train(ipRelation.getIpStart(), ipRelation.getIpEnd(), ipRelation.getProvince());
                 if(count > 10){
                     break;
@@ -42,7 +41,6 @@ public class IpHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static String findRegionByIp(String ip){
@@ -80,11 +78,7 @@ public class IpHelper {
      * @throws Exception
      */
     public static Map<Integer, String> getRegionRelationMap() throws Exception {
-//        BufferedReader ipRelationReader = FileUtil.readFile(regionFile);
         String file =  IpHelper.class.getClassLoader().getResource(regionFile).getFile();
-
-        System.out.println(file);
-
 
         Workbook workbook = PoiUtil.getWorkbook(file);
 
@@ -99,20 +93,6 @@ public class IpHelper {
             map.put(ipCode, province);
         }
 
-//        String line;
-//        Map<Integer, String> map = new HashMap<>();
-//        ipRelationReader.readLine();
-//        while((line = ipRelationReader.readLine()) != null){
-//            String[] split = line.split("\t");
-//            String province = split[0];
-//            Integer ipCode = Integer.valueOf(split[2]);
-//            map.put(ipCode, province);
-//        }
         return map;
     }
-
-
-
-
-
 }

@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
 /**
- * Created by lee on 2015/7/29.
+ * Created by Wang Zhe on 2015/7/29.
  */
 public class FileUtil {
 

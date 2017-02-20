@@ -196,38 +196,4 @@ public class IpTree {
             loopTree(ipNode.rightNode, depth + 1);
         }
     }
-
-    public void loopTree(){
-        loopTree(rootNode, 0);
-    }
-
-
-
-    class node{
-
-    }
-
-    public static void main(String[] args) {
-        IpTree ipTree = new IpTree();
-        //ipTree.train("0.0.0.0", "0.0.0.0", "1000000000");
-        ipTree.train("0.0.0.0", "0.255.255.255", "1000000000");
-        ipTree.train("1.0.0.0", "1.0.0.255", "1036000000");
-        ipTree.train("1.0.1.0", "1.0.3.255", "1156350100");
-        ipTree.train("1.0.4.0", "1.0.7.255", "1036000000");
-        ipTree.train("1.0.8.0", "1.0.15.255", "1156440000");
-        ipTree.train("1.0.16.0", "1.0.31.255", "1392000000");
-
-        //ipTree.loopTree();
-
-
-        System.out.println(ipTree.findIp("1.0.1.254"));
-
-        System.out.println((2 >> 1)&1);
-
-
-        //HashSet<Integer> s = new HashSet<Integer>();
-        //s.contains()
-
-    }
-
 }
