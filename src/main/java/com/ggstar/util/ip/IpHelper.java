@@ -23,17 +23,23 @@ public class IpHelper {
 
     private static final String regionFile = "ipRegion.xlsx";
 
+    private static final Map<String,List<IpRelation>> regionIpCache = new HashMap<String, List<IpRelation>>();
+
+
     static{
         buildTrain();
+        System.out.println("buildTrain Finished");
     }
 
     private static void buildTrain() {
+        System.out.println("buildTrain");
         List<IpRelation> ipRelationList;
         try {
             ipRelationList = IpHelper.getIpRelation();
             int count = 0;
             for (IpRelation ipRelation : ipRelationList) {
                 ipTree.train(ipRelation.getIpStart(), ipRelation.getIpEnd(), ipRelation.getProvince());
+                buildRegionIpMap(ipRelationList);
                 if(count > 10){
                     break;
                 }
@@ -42,6 +48,8 @@ public class IpHelper {
             e.printStackTrace();
         }
     }
+
+
 
     /**
      * 静态方法，传入ip地址，返回ip地址所在城市或地区
@@ -99,5 +107,11 @@ public class IpHelper {
         }
 
         return map;
+    }
+
+    private static void buildRegionIpMap(List<IpRelation> ipRelationList) {
+        for(IpRelation ipRelation: ipRelationList){
+
+        }
     }
 }

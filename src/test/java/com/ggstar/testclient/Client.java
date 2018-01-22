@@ -10,8 +10,13 @@ public class Client {
 
     @Test
     public void example() throws Exception {
-        String ip = "58.30.15.255";
+        String ip = "59.48.32.0";
         String region = IpHelper.findRegionByIp(ip);
         System.out.println(region);
+    }
+
+    @Test
+    public void getIpFromRegion() throws Exception {
+
     }
 }
