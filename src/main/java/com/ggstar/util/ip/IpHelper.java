@@ -38,7 +38,7 @@ public class IpHelper {
             ipRelationList = IpHelper.getIpRelation();
             int count = 0;
             for (IpRelation ipRelation : ipRelationList) {
-                ipTree.train(ipRelation.getIpStart(), ipRelation.getIpEnd(), ipRelation.getProvince());
+//                ipTree.train(ipRelation.getIpStart(), ipRelation.getIpEnd(), ipRelation.getProvince());
                 buildRegionIpMap(ipRelationList);
                 if(count > 10){
                     break;
@@ -60,10 +60,21 @@ public class IpHelper {
         return ipTree.findIp(ip);
     }
 
+
+    public static String getRadomIpByCity(String city){
+        String key = "北京市";
+        for(String dic: regionIpCache.keySet()){
+            if(dic.startsWith(city)){
+                key = dic;
+                break;
+            }
+        }
+        List<IpRelation> preparedList = regionIpCache.get(key);
+        return preparedList.toString();
+    }
     public static List<IpRelation> getIpRelation() throws Exception {
 
-        // <ipCode, province>
-        Map<Integer, String> regionRelationMap = getRegionRelationMap();
+        Map<Integer, IpRegion> regionRelationMap = getRegionMap();
         String file =  IpHelper.class.getClassLoader().getResource(ipFile).getFile();
         BufferedReader ipRelationReader = FileUtil.readFile(file);
 
@@ -75,11 +86,12 @@ public class IpHelper {
             String ipEnd = split[1];
             Integer ipCode = Integer.valueOf(split[2]);
 
-            String province = regionRelationMap.get(ipCode);
+            IpRegion ipRegion = regionRelationMap.get(ipCode);
             IpRelation ipRelation = new IpRelation();
             ipRelation.setIpStart(ipStart);
             ipRelation.setIpEnd(ipEnd);
-            ipRelation.setProvince(province);
+            ipRelation.setProvince(ipRegion.getProvince());
+            ipRelation.setCity(ipRegion.getCity());
             list.add(ipRelation);
         }
         return list;
@@ -87,23 +99,28 @@ public class IpHelper {
     }
 
     /**
-     * @return Map<ipCode, province>
+     * @return Map<ipCode, IpRegion>
      * @throws Exception
      */
-    public static Map<Integer, String> getRegionRelationMap() throws Exception {
+    public static Map<Integer, IpRegion> getRegionMap() throws Exception {
         String file =  IpHelper.class.getClassLoader().getResource(regionFile).getFile();
 
         Workbook workbook = PoiUtil.getWorkbook(file);
 
         Sheet sheet = workbook.getSheetAt(0);
-        Map<Integer, String> map = new HashMap<Integer, String>();
+        Map<Integer, IpRegion> map = new HashMap<Integer, IpRegion>();
         int rowLen = sheet.getPhysicalNumberOfRows();
         for (int i = 1; i < rowLen; i++) {
             Row row = sheet.getRow(i);
             String province = row.getCell(0).getStringCellValue();
+            String city = row.getCell(1).getStringCellValue();
             Double a = row.getCell(2).getNumericCellValue();
             Integer ipCode = a.intValue();
-            map.put(ipCode, province);
+            IpRegion ipRegion = new IpRegion();
+            ipRegion.setCity(city);
+            ipRegion.setProvince(province);
+            ipRegion.setCode(ipCode);
+            map.put(ipCode, ipRegion);
         }
 
         return map;
@@ -111,7 +128,16 @@ public class IpHelper {
 
     private static void buildRegionIpMap(List<IpRelation> ipRelationList) {
         for(IpRelation ipRelation: ipRelationList){
-
+            String key = ipRelation.getCity();
+            if(regionIpCache.containsKey(key)){
+                List<IpRelation> list = regionIpCache.get(key);
+                list.add(ipRelation);
+            }else{
+                List<IpRelation> list = new ArrayList<IpRelation>();
+                list.add(ipRelation);
+                regionIpCache.put(key,list);
+            }
         }
     }
+
 }
