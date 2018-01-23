@@ -7,10 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.BufferedReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Wang Zhe on 2015/8/11.
@@ -36,14 +33,14 @@ public class IpHelper {
         List<IpRelation> ipRelationList;
         try {
             ipRelationList = IpHelper.getIpRelation();
-            int count = 0;
-            for (IpRelation ipRelation : ipRelationList) {
-//                ipTree.train(ipRelation.getIpStart(), ipRelation.getIpEnd(), ipRelation.getProvince());
-                buildRegionIpMap(ipRelationList);
-                if(count > 10){
-                    break;
-                }
-            }
+            buildRegionIpMap(ipRelationList);
+//            int count = 0;
+//            for (IpRelation ipRelation : ipRelationList) {
+////                ipTree.train(ipRelation.getIpStart(), ipRelation.getIpEnd(), ipRelation.getProvince());
+//                if(count > 10){
+//                    break;
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,7 +67,21 @@ public class IpHelper {
             }
         }
         List<IpRelation> preparedList = regionIpCache.get(key);
-        return preparedList.toString();
+        Random rdm = new Random();
+        int index = rdm.nextInt(preparedList.size());
+        IpRelation selected = preparedList.get(index);
+        String [] startIps = selected.getIpStart().split("\\.");
+        String [] endIps = selected.getIpEnd().split("\\.");
+        String ip0 = startIps[0];
+        String ip1 = startIps[1];
+        String ip2 = startIps[2];
+        String ip3 = startIps[3];
+        int minius = Integer.parseInt(endIps[2])-Integer.parseInt(startIps[2]);
+        if(minius>0) {
+            ip2 = String.valueOf(Integer.parseInt(ip2) + rdm.nextInt(minius));
+        }
+        ip3 = String.valueOf(2+ rdm.nextInt(250));
+        return ip0 + "." + ip1 + "." + ip2 + "." + ip3;
     }
     public static List<IpRelation> getIpRelation() throws Exception {
 
@@ -90,6 +101,7 @@ public class IpHelper {
             IpRelation ipRelation = new IpRelation();
             ipRelation.setIpStart(ipStart);
             ipRelation.setIpEnd(ipEnd);
+            ipRelation.setIpCode(ipCode);
             ipRelation.setProvince(ipRegion.getProvince());
             ipRelation.setCity(ipRegion.getCity());
             list.add(ipRelation);

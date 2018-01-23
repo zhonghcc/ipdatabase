@@ -17,8 +17,12 @@ public class Client {
 
     @Test
     public void getIpFromRegion() throws Exception {
-        String city = "北京";
+        String city = "杭州";
         String result = IpHelper.getRadomIpByCity(city);
         System.out.println(result);
+        for (int i=0;i<20;i++){
+            result = IpHelper.getRadomIpByCity(city);
+            System.out.println(result);
+        }
     }
 }

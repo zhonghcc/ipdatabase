@@ -54,4 +54,9 @@ public class IpRelation {
     public void setProvince(String province) {
         this.province = province;
     }
+
+    @Override
+    public String toString(){
+        return String.format("%d %s %s %s %s",ipCode,ipStart,ipEnd,province,city);
+    }
 }
