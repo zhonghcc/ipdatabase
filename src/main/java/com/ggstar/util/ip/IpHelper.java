@@ -1,12 +1,10 @@
 package com.ggstar.util.ip;
 
-import com.ggstar.util.file.FileUtil;
-import com.ggstar.util.file.PoiUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.StringReader;
 import java.util.*;
 
 /**
@@ -17,8 +15,6 @@ public class IpHelper {
     private static IpTree ipTree = IpTree.getInstance();
 
     private static final String ipFile = "ipDatabase.csv";
-
-    private static final String regionFile = "ipRegion.xlsx";
 
     private static final Map<String,List<IpRelation>> regionIpCache = new HashMap<String, List<IpRelation>>();
 
@@ -87,7 +83,7 @@ public class IpHelper {
 
         Map<Integer, IpRegion> regionRelationMap = getRegionMap();
         String file =  IpHelper.class.getClassLoader().getResource(ipFile).getFile();
-        BufferedReader ipRelationReader = FileUtil.readFile(file);
+        BufferedReader ipRelationReader = new BufferedReader(new FileReader(new File(file)));
 
         String line;
         List<IpRelation> list = new ArrayList<IpRelation>();
@@ -115,19 +111,14 @@ public class IpHelper {
      * @throws Exception
      */
     public static Map<Integer, IpRegion> getRegionMap() throws Exception {
-        String file =  IpHelper.class.getClassLoader().getResource(regionFile).getFile();
-
-        Workbook workbook = PoiUtil.getWorkbook(file);
-
-        Sheet sheet = workbook.getSheetAt(0);
         Map<Integer, IpRegion> map = new HashMap<Integer, IpRegion>();
-        int rowLen = sheet.getPhysicalNumberOfRows();
-        for (int i = 1; i < rowLen; i++) {
-            Row row = sheet.getRow(i);
-            String province = row.getCell(0).getStringCellValue();
-            String city = row.getCell(1).getStringCellValue();
-            Double a = row.getCell(2).getNumericCellValue();
-            Integer ipCode = a.intValue();
+        String line;
+        BufferedReader reader = new BufferedReader(new StringReader(IpRegionFile.content));
+        while((line = reader.readLine()) != null){
+            String []row = line.split(",");
+            String province = row[0];
+            String city = row[1];
+            Integer ipCode = Integer.parseInt(row[2]);
             IpRegion ipRegion = new IpRegion();
             ipRegion.setCity(city);
             ipRegion.setProvince(province);
